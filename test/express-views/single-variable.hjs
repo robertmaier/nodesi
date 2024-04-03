@@ -1,0 +1,7 @@
+<div id="simple-variable"><esi:vars name="SIMPLE_VARIABLE" /></div>
+
+<div id="block-variables">
+  <esi:vars>
+  
+  </esi:vars>
+</div>

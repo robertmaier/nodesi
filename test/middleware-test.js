@@ -305,4 +305,35 @@ describe('A express middleware', () => {
             })
             .catch(done);
     });
+
+    it('should replace the esi:vars tags with values given in the request', (done) => {
+        // given
+        server.addListener('request', (req, res) => {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end('<div>test</div>');
+        });
+        app.use(middleware({}));
+        app.get('/esi', (req, res) => {
+            req.esiOptions = {
+                vars: {
+                    'SIMPLE_VARIABLE': 'simple value',
+                }
+            };
+            res.render('single-variable', (err, str) => {
+                res.send(str);
+            });
+        });
+
+        // when
+        const req = fetch('http://localhost:' + expressPort + '/esi');
+
+        // then
+        req.then((response) => response.text())
+            .then((text) => {
+                assert.equal(text, '<div id="simple-variable">simple value</div>\n');
+                done();
+            })
+            .catch(done);
+    });
+
 });
